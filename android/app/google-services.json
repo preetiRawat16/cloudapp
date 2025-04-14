@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "28273265181",
+    "project_id": "cloudcomputing-3d496",
+    "storage_bucket": "cloudcomputing-3d496.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:28273265181:android:7491c14ec1ea1500ca94f4",
+        "android_client_info": {
+          "package_name": "com.example.cloudchat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "28273265181-35oiml4haksbv060vje6cpjkdmc65t39.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.cloudchat",
+            "certificate_hash": "4783a4337ecc479fc189fd27784202b40f49c322"
+          }
+        },
+        {
+          "client_id": "28273265181-n5683p50ut6g0rd6qnpg11e1upr0jeeb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCt-ZvF-5HPmA9bWP47W9WN62tFx6EYp-8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "28273265181-n5683p50ut6g0rd6qnpg11e1upr0jeeb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
