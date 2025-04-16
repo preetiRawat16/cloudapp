@@ -79,7 +79,7 @@ class _userprofileState extends State<userprofile> {
 
                   decoration:  BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage("lib/images/zzz_back.jpg"),
+                      image: AssetImage("lib/characters/zzze.jpg"),
                       fit: BoxFit.cover,
                     ),
                   ),

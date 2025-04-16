@@ -136,7 +136,7 @@ class SignUpPage extends StatelessWidget {
                                 backgroundColor: borderColor,
                                 foregroundColor: bgColor,
                               ),
-                              child: const Text('Sign Up'),
+                              child: const Text('Sign Up/Login'),
                             ),
                           ],
                         ),
@@ -150,7 +150,7 @@ class SignUpPage extends StatelessWidget {
                       child: ElevatedButton.icon(
                         icon: const Icon(Icons.login, color: Color(0xFFbbd01a)),
                         label: const Text(
-                          "Sign Up with Google",
+                          "Sign Up/Login with Google",
                           style: TextStyle(color: Color(0xFFbbd01a)),
                         ),
                         style: ElevatedButton.styleFrom(
