@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloudchat/genshin_main.dart';
 import 'package:cloudchat/search.dart';
 import 'package:cloudchat/signup_page.dart';
-import 'package:cloudchat/userprofile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,15 +15,15 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:popup_card/popup_card.dart';
 
-class genshinMain extends StatefulWidget {
-  const genshinMain({super.key});
+class userprofile extends StatefulWidget {
+  const userprofile({super.key});
 
   @override
-  State<genshinMain> createState() => _genshinMainState();
+  State<userprofile> createState() => _userprofileState();
 }
 
-class _genshinMainState extends State<genshinMain> {
-
+class _userprofileState extends State<userprofile> {
+  final String? currentUserEmail = FirebaseAuth.instance.currentUser?.email;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,7 +83,10 @@ class _genshinMainState extends State<genshinMain> {
                   ),
                   child:
                   StreamBuilder<QuerySnapshot>(
-                    stream: FirebaseFirestore.instance.collection('posts').snapshots(),
+                    stream: FirebaseFirestore.instance
+                        .collection('posts')
+                        .where('userId', isEqualTo: currentUserEmail) // Filter by logged-in user
+                        .snapshots(),
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
                         return Center(child: Text('Error: ${snapshot.error}'));
@@ -99,18 +102,23 @@ class _genshinMainState extends State<genshinMain> {
                         child: Column(
                           children: [
                             Column(
-                              children:
-                              List.generate(posts.length, (index) {
+                              children: List.generate(posts.length, (index) {
                                 final post = posts[index];
                                 final data = post.data() as Map<String, dynamic>;
 
-                                return  Padding(
+                                return Padding(
                                   padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                  child: PostWidget( postText: data['title'], userid: data['userId'], postDes: data['description'] , imgurl: data['imageUrl'],num:data['likes'].toString()),
+                                  child: PostWidget(
+                                    postText: data['title'],
+                                    userid: data['userId'],
+                                    postDes: data['description'],
+                                    imgurl: data['imageUrl'],
+                                    num: data['likes'].toString(),
+                                  ),
                                 );
                               }),
                             ),
-                            SizedBox(height: 50,)
+                            SizedBox(height: 50),
                           ],
                         ),
                       );
@@ -183,7 +191,7 @@ class _genshinMainState extends State<genshinMain> {
               onPressed: () async {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) =>  userprofile()),
+                  MaterialPageRoute(builder: (context) => const userprofile()),
                 );
               },
             ),IconButton(
@@ -195,9 +203,8 @@ class _genshinMainState extends State<genshinMain> {
               onPressed: () async {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) =>  searchZZZ()),
+                  MaterialPageRoute(builder: (context) => const searchZZZ()),
                 );
-
               },
             ),
             IconButton(
@@ -208,6 +215,7 @@ class _genshinMainState extends State<genshinMain> {
               ),
               onPressed: () async {
                 await GoogleSignIn().signOut();
+
                 await FirebaseAuth.instance.signOut();
                 Navigator.pushReplacement(
                   context,
