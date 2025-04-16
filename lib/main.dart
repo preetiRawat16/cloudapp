@@ -1,4 +1,5 @@
 import 'package:cloudchat/search.dart';
+import 'package:cloudchat/userprofile.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'genshin_main.dart';
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Firebase Google Sign-Up',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: const SignUpPage(),
+      home: const userprofile(),
     );
   }
 }

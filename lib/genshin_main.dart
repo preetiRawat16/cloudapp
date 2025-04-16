@@ -83,7 +83,7 @@ class _genshinMainState extends State<genshinMain> {
                   ),
                   child:
                   StreamBuilder<QuerySnapshot>(
-                    stream: FirebaseFirestore.instance.collection('posts').snapshots(),
+                    stream: FirebaseFirestore.instance.collection('posts').orderBy('createdAt', descending: true).snapshots(),
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
                         return Center(child: Text('Error: ${snapshot.error}'));
@@ -94,7 +94,6 @@ class _genshinMainState extends State<genshinMain> {
                       }
 
                       final posts = snapshot.data!.docs;
-
                       return SingleChildScrollView(
                         child: Column(
                           children: [
@@ -103,10 +102,10 @@ class _genshinMainState extends State<genshinMain> {
                               List.generate(posts.length, (index) {
                                 final post = posts[index];
                                 final data = post.data() as Map<String, dynamic>;
-
+                                final docId = post.id;
                                 return  Padding(
                                   padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                  child: PostWidget( postText: data['title'], userid: data['userId'], postDes: data['description'] , imgurl: data['imageUrl'],num:data['likes'].toString()),
+                                  child: PostWidget( postText: data['title'], userid: data['userId'], postDes: data['description'] , imgurl: data['imageUrl'],num:data['likes'].toString(),iddoc:docId),
                                 );
                               }),
                             ),
@@ -432,11 +431,12 @@ class PostWidget extends StatelessWidget {
   final String postDes;
   final String imgurl;
   final String num;
+  final String iddoc;
   bool isLiked = false;
   bool isLikedcolor = false;
 
   final ValueNotifier<bool> isLikedNotifier = ValueNotifier(false);
-  PostWidget({required this.postText, required this.userid,required this.postDes,required this.imgurl,required this.num, Key? key}) : super(key: key);
+  PostWidget({required this.postText, required this.userid,required this.postDes,required this.imgurl,required this.num, Key? key, required this.iddoc,}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -508,7 +508,7 @@ class PostWidget extends StatelessWidget {
                         size: 30,
                       ),
                       onPressed: () async {
-                        final docRef = FirebaseFirestore.instance.collection('posts').doc('yTyTfwpXTGNpVyMTT6j6'); // replace with your doc ID
+                        final docRef = FirebaseFirestore.instance.collection('posts').doc(this.iddoc); // replace with your doc ID
 
                         try {
                           final snapshot = await docRef.get();

@@ -93,12 +93,45 @@ class SignUpPage extends StatelessWidget {
                             ),
                             const SizedBox(height: 24),
                             ElevatedButton(
-                              onPressed: () {
-                                // handle sign up
-                                final email = emailController.text;
-                                final password = passwordController.text;
-                                print('Email: $email, Password: $password');
-                              },
+                              onPressed: ()async {
+                            final email = emailController.text.trim();
+                            final password = passwordController.text;
+
+                            try {
+                            final userCredential = await FirebaseAuth.instance
+                                .createUserWithEmailAndPassword(email: email, password: password);
+
+                            print('User signed up: ${userCredential.user?.uid}');
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => const genshinMain()),
+                            );
+                            } on FirebaseAuthException catch (e) {
+                            String message;
+                            if (e.code == 'email-already-in-use') {
+                            message = 'This email is already in use.';
+                            final loginCredential = await FirebaseAuth.instance
+                                .signInWithEmailAndPassword(email: email, password: password);
+
+                            print('User logged in: ${loginCredential.user?.uid}');
+
+                            // ✅ Navigate after successful login
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => const genshinMain()),
+                            );
+                            } else if (e.code == 'weak-password') {
+                            message = 'The password provided is too weak.';
+                            } else if (e.code == 'invalid-email') {
+                            message = 'Invalid email address.';
+                            } else {
+                            message = 'An error occurred. Please try again.';
+                            }
+
+                            print('Signup error: $message');
+                            // Optionally show a snackbar or dialog with the error
+                            }
+                            },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: borderColor,
                                 foregroundColor: bgColor,

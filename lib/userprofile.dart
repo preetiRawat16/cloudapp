@@ -75,7 +75,9 @@ class _userprofileState extends State<userprofile> {
                 // Background + Content
                 Container(
                   width: MediaQuery.of(context).size.width,
-                  decoration: const BoxDecoration(
+                    height: MediaQuery.of(context).size.height,
+
+                  decoration:  BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage("lib/images/zzz_back.jpg"),
                       fit: BoxFit.cover,
@@ -105,6 +107,7 @@ class _userprofileState extends State<userprofile> {
                               children: List.generate(posts.length, (index) {
                                 final post = posts[index];
                                 final data = post.data() as Map<String, dynamic>;
+                                final docId = post.id;
 
                                 return Padding(
                                   padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -113,7 +116,7 @@ class _userprofileState extends State<userprofile> {
                                     userid: data['userId'],
                                     postDes: data['description'],
                                     imgurl: data['imageUrl'],
-                                    num: data['likes'].toString(),
+                                    num: data['likes'].toString(),iddoc:docId
                                   ),
                                 );
                               }),
@@ -440,11 +443,13 @@ class PostWidget extends StatelessWidget {
   final String postDes;
   final String imgurl;
   final String num;
+  final String iddoc;
+
   bool isLiked = false;
   bool isLikedcolor = false;
 
   final ValueNotifier<bool> isLikedNotifier = ValueNotifier(false);
-  PostWidget({required this.postText, required this.userid,required this.postDes,required this.imgurl,required this.num, Key? key}) : super(key: key);
+  PostWidget({required this.postText, required this.userid,required this.postDes,required this.imgurl,required this.num, required this.iddoc,Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -516,7 +521,7 @@ class PostWidget extends StatelessWidget {
                         size: 30,
                       ),
                       onPressed: () async {
-                        final docRef = FirebaseFirestore.instance.collection('posts').doc('yTyTfwpXTGNpVyMTT6j6'); // replace with your doc ID
+                        final docRef = FirebaseFirestore.instance.collection('posts').doc(this.iddoc); // replace with your doc ID
 
                         try {
                           final snapshot = await docRef.get();
