@@ -471,14 +471,69 @@ class PostWidget extends StatelessWidget {
                 color: Colors.black.withOpacity(0.5)
               ),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  CircleAvatar(
-                    radius: 20, // Adjust size as needed
-                    backgroundImage: AssetImage('lib/images/pfp.jpg'), // Replace with your image path
-                    backgroundColor: Colors.transparent,
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 20, // Adjust size as needed
+                        backgroundImage: AssetImage('lib/images/pfp.jpg'), // Replace with your image path
+                        backgroundColor: Colors.transparent,
+                      ),
+                      SizedBox(width: 10,),
+                      Text(this.userid.split('@').first,style: TextStyle(color: Colors.white),),
+                    ],
                   ),
-                  SizedBox(width: 10,),
-                  Text(this.userid.split('@').first,style: TextStyle(color: Colors.white),)
+                  IconButton(
+                    icon: const Icon(Icons.delete, size: 20, color: Color(0xFFD7F300),),
+                    onPressed: () async {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          backgroundColor: const Color(0xFF161616),
+                          title: const Text(
+                            'Confirm Deletion',
+                            style: TextStyle(color: Color(0xFFDEDBE7)),
+                          ),
+                          content: const Text(
+                            'Are you sure you want to delete this item?',
+                            style: TextStyle(color: Color(0xFFDEDBE7)),
+                          ),
+                          actions: [
+                            TextButton(
+                              child: const Text(
+                                'Cancel',
+                                style: TextStyle(color: Color(0xFFDEDBE7)),
+                              ),
+                              onPressed: () => Navigator.of(context).pop(),
+                            ),
+                            TextButton(
+                              child: const Text(
+                                'Delete',
+                                style: TextStyle(color: Color(0xFFD7F300)),
+                              ),
+                              onPressed: () async {
+                                Navigator.of(context).pop(); // Close the dialog
+                                try {
+                                  await FirebaseFirestore.instance
+                                      .collection('posts')
+                                      .doc(iddoc)
+                                      .delete();
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text('Document deleted')),
+                                  );
+                                } catch (e) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('Error: $e')),
+                                  );
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  )
                 ],
               ),
             ),
